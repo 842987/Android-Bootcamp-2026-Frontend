@@ -1,4 +1,4 @@
-# team-backend-raskrivaetsya-vesnoy
+# Team: backend-raskrivaetsya-vesnoy
 
 # Техническое задание на разработку программного продукта для планирования встреч
 
