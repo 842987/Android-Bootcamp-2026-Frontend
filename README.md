@@ -1,4 +1,4 @@
-# Team-dashboard-pioneers
+# Team dashboard pioneers
 
 # Техническое задание на разработку программного продукта для планирования встреч
 
