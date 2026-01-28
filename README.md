@@ -1,6 +1,6 @@
 # Team Trinity
 
-## Figma: https://github.com/impactt33/Android-Bootcamp-2026-Frontend
+## Figma: https://www.figma.com/design/DRfPHvCcJTOmGu3tyHEQNS/Bootcamp2026?node-id=0-1&p=f&m=draw
 
 # Техническое задание на разработку программного продукта для планирования встреч
 
