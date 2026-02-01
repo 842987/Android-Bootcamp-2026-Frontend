@@ -1,6 +1,6 @@
 package ru.innovationcampus.android.ui.screen.list
 
-import ru.innovationcampus.android.domain.entities.UserEntity
+import ru.innovationcampus.android.domain.list.entities.UserEntity
 
 sealed interface ListState {
     data class Error(val reason: String): ListState

@@ -1,7 +1,7 @@
 package ru.innovationcampus.android.data
 
 import ru.innovationcampus.android.data.source.UserInfoDataSource
-import ru.innovationcampus.android.domain.entities.UserEntity
+import ru.innovationcampus.android.domain.list.entities.UserEntity
 
 class UserRepository(
     private val userInfoDataSource: UserInfoDataSource

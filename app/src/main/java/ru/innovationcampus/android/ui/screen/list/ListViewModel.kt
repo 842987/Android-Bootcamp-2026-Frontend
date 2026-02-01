@@ -2,13 +2,12 @@ package ru.innovationcampus.android.ui.screen.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.innovationcampus.android.data.UserRepository
 import ru.innovationcampus.android.data.source.UserInfoDataSource
-import ru.innovationcampus.android.domain.GetUsersUseCase
+import ru.innovationcampus.android.domain.list.GetUsersUseCase
 
 class ListViewModel: ViewModel() {
     private val getUsersUseCase = GetUsersUseCase(

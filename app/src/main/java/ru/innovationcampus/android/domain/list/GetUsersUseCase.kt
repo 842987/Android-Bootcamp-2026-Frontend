@@ -1,7 +1,7 @@
-package ru.innovationcampus.android.domain
+package ru.innovationcampus.android.domain.list
 
 import ru.innovationcampus.android.data.UserRepository
-import ru.innovationcampus.android.domain.entities.UserEntity
+import ru.innovationcampus.android.domain.list.entities.UserEntity
 
 class GetUsersUseCase(
     private val userRepository: UserRepository
