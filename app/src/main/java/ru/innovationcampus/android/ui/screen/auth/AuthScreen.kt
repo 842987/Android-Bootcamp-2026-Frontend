@@ -1,5 +1,7 @@
 package ru.innovationcampus.android.ui.screen.auth
 
+import android.view.WindowManager
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,14 +34,27 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import ru.innovationcampus.android.R
+import ru.innovationcampus.android.ui.nav.ListRoute
 
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel = viewModel(),
+    navController: NavController,
 ) {
+    SecureScreen()
     val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.actionFlow.collect { action ->
+            when (action) {
+                is AuthAction.OpenScreen -> navController.navigate(action.route)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -127,5 +143,21 @@ private fun Content(
             style = MaterialTheme.typography.bodyMedium,
             color = Color.Red,
         )
+    }
+}
+
+@Composable
+fun SecureScreen() {
+    val activity = LocalActivity.current
+    LifecycleStartEffect(Unit) {
+        activity?.window?.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+        onStopOrDispose {
+            activity?.window?.clearFlags(
+                WindowManager.LayoutParams.FLAG_SECURE
+            )
+        }
     }
 }
