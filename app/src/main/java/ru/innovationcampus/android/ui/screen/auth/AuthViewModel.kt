@@ -7,13 +7,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.innovationcampus.android.data.AuthRepository
 import ru.innovationcampus.android.domain.auth.CheckAndSaveAuthUseCase
 import ru.innovationcampus.android.domain.auth.CheckAuthFormatUseCase
 
 class AuthViewModel : ViewModel() {
     private val checkAuthFormatUseCase by lazy { CheckAuthFormatUseCase() }
-    private val checkAndSaveAuthCodeUseCase by lazy { CheckAndSaveAuthUseCase(AuthRepository) }
+    private val checkAndSaveAuthCodeUseCase by lazy { CheckAndSaveAuthUseCase() }
     private val _uiState = MutableStateFlow<AuthState>(
         AuthState.Data(
             isEnabledSend = false,
