@@ -28,12 +28,12 @@ import com.example.planify.R
 import com.example.planify.main.common.themes.Locals
 import com.example.planify.main.common.ui.withShapeBackground
 import com.example.planify.main.common.utils.dateForPage
-import com.example.planify.main.features.meeting.entities.MeetingInfo
+import com.example.planify.main.features.meetings.domain.entities.MeetingContext
 import com.example.planify.main.navigation.screens.main_screen.views.home.home_view.UIState
 import com.example.planify.main.navigation.screens.main_screen.views.home.home_view.components.MeetingCard
 import com.example.planify.main.navigation.screens.main_screen.views.home.home_view.components.ScheduleScroll
 import com.example.planify.main.navigation.screens.main_screen.views.home.home_view.components.entities.ScrollableDateRow
-import com.example.planify.main.navigation.screens.main_screen.views.home.home_view.components.entities.SkeletonMeetingCard
+import com.example.planify.main.navigation.screens.main_screen.views.home.home_view.components.SkeletonMeetingCard
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -47,7 +47,7 @@ fun HomeDayView(
     initialPage: Int,
     uiState: UIState,
     onDateSelected: (LocalDate) -> Unit,
-    getMeetingsInfoByDate: (LocalDate) -> List<MeetingInfo>
+    getMeetingsInfoByDate: (LocalDate) -> List<MeetingContext>
 ) {
     @Suppress("DEPRECATION")
     val textFormat = selectedDate.format(ofPattern("EEEE, d MMMM", Locale("ru")))
@@ -86,7 +86,7 @@ fun HomeDayView(
             }
 
             val meetingsByStart = remember(pageDate) {
-                meetings.associateBy { it.meeting.timeStart }
+                meetings.associateBy { it.meeting.startsAt }
             }
 
             LazyColumn(

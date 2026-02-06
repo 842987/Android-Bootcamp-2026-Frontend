@@ -1,7 +1,8 @@
-package com.example.planify.main.navigation.screens.main_screen.views.profile
+package com.example.planify.main.navigation.screens.main_screen.views.profile.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,58 +29,55 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.adamglin.PhosphorIcons
 import com.adamglin.phosphoricons.Regular
 import com.adamglin.phosphoricons.regular.Briefcase
 import com.adamglin.phosphoricons.regular.Buildings
 import com.adamglin.phosphoricons.regular.EnvelopeSimple
+import com.adamglin.phosphoricons.regular.Pen
 import com.adamglin.phosphoricons.regular.SignOut
 import com.example.planify.R
 import com.example.planify.main.common.themes.Locals
-import com.example.planify.main.features.auth.domain.services.UsersService
-import com.example.planify.main.features.profile.domain.services.ProfilesService
-import com.example.planify.main.features.profile.entities.Profile
-import com.example.planify.main.navigation.screens.init_screen.components.LoadingView
+import com.example.planify.main.features.auth.domain.entities.UserPrivate
+import com.example.planify.main.features.profiles.domain.entities.Profile
+import com.example.planify.main.navigation.screens.fixed_screens.ErrorScreen
+import com.example.planify.main.navigation.screens.main_screen.views.profile.ProfileViewModel
+import com.example.planify.main.navigation.screens.main_screen.views.profile.UIState
+import com.example.planify.main.navigation.screens.main_screen.views.profile.components.SkeletonProfile
 
 @Composable
 fun ProfileView(
     scaffoldPadding: PaddingValues,
-    profileService: ProfilesService,
-    usersService: UsersService
+    onEditClick: () -> Unit
 ) {
-    val factory = remember { ProfileViewModelFactory(
-        profileService = profileService,
-        usersService = usersService
-    ) }
-
     ProfileView(
-        viewModel = viewModel(factory = factory),
-        scaffoldPadding = scaffoldPadding
+        viewModel = hiltViewModel(),
+        scaffoldPadding = scaffoldPadding,
+        onEditClick = onEditClick
     )
 }
 
 @Composable
 private fun ProfileView(
     viewModel: ProfileViewModel,
-    scaffoldPadding: PaddingValues
+    scaffoldPadding: PaddingValues,
+    onEditClick: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
 
     val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.getOrFetchUserInfo()
-    }
 
     Surface(
         modifier = Modifier
@@ -96,22 +94,30 @@ private fun ProfileView(
         ) {
             when(uiState) {
                 is UIState.Loading -> {
-                    LoadingView()
+                    SkeletonProfile()
                 }
 
                 is UIState.ContentData -> {
-                    ProfileInfoView((uiState as UIState.ContentData).profile)
+                    InfoView(
+                        (uiState as UIState.ContentData).profile,
+                        (uiState as UIState.ContentData).user,
+                        onEditClick = onEditClick,
+                        onLogout = { viewModel.logout() }
+                    )
                 }
 
-                is UIState.Error -> { Text("123") }
+                is UIState.Error -> { ErrorScreen((uiState as UIState.Error).message) }
             }
         }
     }
 }
 
 @Composable
-fun ProfileInfoView(
-    profile: Profile
+fun InfoView(
+    profile: Profile,
+    user: UserPrivate,
+    onEditClick: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val shape = Locals.shapes.mediumShape
@@ -123,7 +129,8 @@ fun ProfileInfoView(
                 shape = shape,
                 color = Locals.extras.border,
                 width = 1.dp
-            ),
+            )
+            .height(Locals.dimens.profileCardHeight1),
         shape = shape,
         colors = CardDefaults.cardColors(
             containerColor = colors.surface
@@ -133,16 +140,20 @@ fun ProfileInfoView(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = Locals.spacing.l),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
-                    .size(Locals.icons.largeLower)
-                    .clip(CircleShape)
-                    .background(colors.primary),
+                    .size(Locals.icons.largeLower),
                 contentAlignment = Alignment.Center
             ) {
-
+                AsyncImage(
+                    modifier = Modifier
+                        .clip(CircleShape),
+                    model = profile.profileImageUrl,
+                    contentDescription = null
+                )
             }
 
             Spacer(Modifier.height(Locals.spacing.s))
@@ -169,6 +180,57 @@ fun ProfileInfoView(
                 style = MaterialTheme.typography.bodyMedium,
                 color = colors.onSurfaceVariant
             )
+
+            Spacer(Modifier.height(Locals.spacing.m))
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(Locals.dimens.profileEditButtonHeight)
+                    .border(
+                        color = Locals.extras.border,
+                        shape = shape,
+                        width = 1.dp
+                    )
+                    .shadow(
+                        elevation = 1.dp,
+                        shape = shape,
+                        ambientColor = Locals.extras.mutedForeground.copy(alpha = 0.6f),
+                        spotColor = Locals.extras.mutedForeground.copy(alpha = 0.6f)
+                    ),
+                colors = CardDefaults.cardColors(containerColor = colors.surface),
+                shape = shape
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(
+                        onClick = onEditClick
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(Locals.icons.smallPlus),
+                            imageVector = PhosphorIcons.Regular.Pen,
+                            contentDescription = null
+                        )
+
+                        Spacer(modifier = Modifier.width(Locals.spacing.xs))
+
+                        Text(
+                            text = stringResource(R.string.edit_profile),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+
+            }
         }
     }
 
@@ -180,7 +242,7 @@ fun ProfileInfoView(
         color = colors.onSurfaceVariant
     )
 
-    Spacer(Modifier.height(8.dp))
+    Spacer(Modifier.height(Locals.spacing.xs))
 
     Card(
         modifier = Modifier
@@ -189,14 +251,15 @@ fun ProfileInfoView(
                 color = Locals.extras.border,
                 shape = shape,
                 width = 1.dp
-            ),
+            )
+            .height(Locals.dimens.profileCardHeight2),
         shape = shape,
         colors = CardDefaults.cardColors(containerColor = colors.surface)
     ) {
         ProfileInfoRow(
             icon = PhosphorIcons.Regular.EnvelopeSimple,
             title = stringResource(R.string.email),
-            subtitle = "pidoras123@gmail.com"
+            subtitle = user.email
         )
         Divider(color = Locals.extras.border)
         ProfileInfoRow(
@@ -215,7 +278,7 @@ fun ProfileInfoView(
     Spacer(Modifier.height(Locals.spacing.m))
 
     OutlinedButton(
-        onClick = { /* TODO: logout */ },
+        onClick = onLogout,
         modifier = Modifier
             .fillMaxWidth()
             .height(Locals.dimens.logOutButtonHeight),

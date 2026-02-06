@@ -1,27 +1,19 @@
 package com.example.planify
 
 import android.app.Application
-import com.example.planify.main.features.auth.data.repositories_impl.AuthRepositoryImplST
-import com.example.planify.main.features.auth.data.repositories_impl.UsersRepositoryImplST
-import com.example.planify.main.features.auth.domain.services_impl.AuthServiceImplST
-import com.example.planify.main.features.auth.domain.services_impl.UsersServiceImplST
-import com.example.planify.main.features.meeting.data.repositories_impl.MeetingRepositoryImplST
-import com.example.planify.main.features.meeting.domain.services_impl.MeetingServiceImplST
-import com.example.planify.main.features.profile.data.repositories_impl.ProfilesRepositoryImplST
-import com.example.planify.main.features.profile.domain.services_impl.ProfilesServiceImplST
+import com.google.crypto.tink.config.TinkConfig
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class PlanifyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        initTink()
+    }
 
-        AuthServiceImplST.init(AuthRepositoryImplST)
-
-        MeetingServiceImplST.init(MeetingRepositoryImplST)
-
-        ProfilesServiceImplST.init(ProfilesRepositoryImplST)
-
-        UsersServiceImplST.init(UsersRepositoryImplST)
+    private fun initTink() {
+        TinkConfig.register()
     }
 }
 
-// UI -> ViewModel -> Service (Usecases) -> Repository -> DataSource 💀💀💀
+// UI -> ViewModel -> Service (UseCases) -> Repository -> DataSource 💀💀💀

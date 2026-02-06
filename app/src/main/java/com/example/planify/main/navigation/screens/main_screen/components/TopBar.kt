@@ -49,60 +49,14 @@ import com.example.planify.main.common.themes.Locals
 import com.example.planify.main.common.themes.shapes.shapes
 import com.example.planify.main.common.ui.PlaceholderText
 import com.example.planify.main.common.ui.TopBarTitleText
+import com.example.planify.main.common.ui.TopBarTitleTextLarge
 import com.example.planify.main.common.ui.TopBarTitleTextSecondary
 import com.example.planify.main.common.ui.objectClickable
 import com.example.planify.main.common.ui.withShapeBackground
 import com.example.planify.main.navigation.screens.main_screen.MainScreenRoute
 
 @Composable
-fun NotificationIcon(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    val colors = MaterialTheme.colorScheme
-    val gradient = Locals.gradients
-
-    val shape = CircleShape
-
-    Box(
-        modifier = Modifier
-            .shadow(
-                elevation = Locals.dimens.elevation,
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = modifier
-                .clip(shape),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(Locals.icons.medium)
-                    .objectClickable(
-                        onClick = onClick
-                    )
-                    .withShapeBackground(
-                        gradient = gradient.blue,
-                        shape = shape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(Locals.icons.smallPlus),
-                    imageVector = PhosphorIcons.Bold.Bell,
-                    contentDescription = null,
-                    tint = colors.onPrimary
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun SecondaryInfo(
+fun SecondaryHomeInfo(
     month: String
 ) {
     val colors = MaterialTheme.colorScheme
@@ -127,7 +81,7 @@ fun SecondaryInfo(
 }
 
 @Composable
-fun SecondaryInfo(
+fun SecondaryInboxInfo(
     countUnread: Int
 ) {
     Row(
@@ -141,94 +95,136 @@ fun SecondaryInfo(
         )
     }
 }
+@Composable
+fun HomeTopBar(
+    title: String,
+    description: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            TopBarTitleText(title = title)
+            Spacer(modifier = Modifier.height(Locals.spacing.xxs))
+            SecondaryHomeInfo(description)
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        NotificationIcon(
+            onClick = onClick
+        )
+    }
+}
 
 @Composable
-fun GlassSearchBar(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    placeholder: String
+fun ChatTopBar(
+    title: String
 ) {
-    val colors = MaterialTheme.colorScheme
-    val extras = Locals.extras
-    val shape = Locals.shapes.mediumShape
 
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(Locals.dimens.searchBarHeight)
-            .shadow(
-                elevation = Locals.dimens.elevation,
-                shape = shape,
-                clip = false,
-                spotColor = extras.glass.shadow
-            )
-            .clip(shape)
-            .background(extras.glass.bgStrong)
-            .padding(horizontal = Locals.spacing.m),
-        contentAlignment = Alignment.CenterStart
+    var query by remember { mutableStateOf("") }
+
+    Row(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.Start
         ) {
-            Icon(
-                imageVector = PhosphorIcons.Regular.MagnifyingGlass,
-                contentDescription = null,
-                tint = colors.onPrimaryContainer.copy(alpha = 0.65f),
-                modifier = Modifier
-                    .size(Locals.icons.smallPlus),
+            TopBarTitleText(title = title)
+            Spacer(modifier = Modifier.height(Locals.spacing.xxs))
+            GlassSearchBar(
+                value = query,
+                onValueChange = { query = it },
+                modifier = Modifier,
+                placeholder = stringResource(R.string.glass_search_placeholder)
             )
-
-            Spacer(modifier = Modifier.width(Locals.spacing.s))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                BasicTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = value,
-                    onValueChange = onValueChange,
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = {}),
-                    textStyle = TextStyle.Default.copy(
-                        fontSize = 18.sp,
-                        color = colors.onPrimaryContainer
-                    ),
-                    decorationBox = { innerTextField ->
-                        Box(
-                            modifier = Modifier,
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            if (value.isEmpty()) {
-                                PlaceholderText(
-                                    modifier = Modifier,
-                                    text = placeholder
-                                )
-                            }
-                            innerTextField()
-                        }
-                    }
-                )
-            }
         }
     }
 }
 
 @Composable
+fun InboxTopBar(
+    title: String,
+    description: Int,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.Start
+        ) {
+            TopBarTitleText(title = title)
+            Spacer(modifier = Modifier.height(Locals.spacing.xxs))
+            SecondaryInboxInfo(description)
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        NotificationIcon(
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
+fun ProfileTopBar(
+    title: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxSize(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
+        ) {
+            TopBarTitleTextLarge(title = title)
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        SettingsIcon(
+            onClick = onClick
+        )
+    }
+}
+@Composable
 fun TopBar(
     pagerRouter: PagerRouterNavigator,
-    monthTitle: String
+    monthTitle: String,
+    onSettings: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
 
     val countUnread = 4
-
-    var query by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier
@@ -239,45 +235,35 @@ fun TopBar(
         Row(
             modifier = Modifier
                 .statusBarsPadding()
-                .padding(Locals.spacing.m),
+                .padding(horizontal = Locals.spacing.m,
+                    vertical = Locals.spacing.xs)
+                .fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            val title = when(pagerRouter.currentRoute.key) {
-                MainScreenRoute.Home.key -> stringResource(R.string.schedule)
-                MainScreenRoute.Chat.key -> stringResource(R.string.chats)
-                MainScreenRoute.Inbox.key -> stringResource(R.string.inbox)
-                MainScreenRoute.Profile.key -> stringResource(R.string.profile)
-                else -> throw IllegalArgumentException()
-            }
-
             Column(
                 modifier = Modifier
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.Start
             ) {
-                TopBarTitleText(
-                    modifier = Modifier,
-                    title = title
-                )
-
                 when(pagerRouter.currentRoute.key) {
-                    MainScreenRoute.Home.key -> SecondaryInfo(monthTitle)
-                    MainScreenRoute.Inbox.key -> SecondaryInfo(countUnread)
-                    MainScreenRoute.Chat.key -> GlassSearchBar(
-                        value = query,
-                        onValueChange = { query = it },
-                        modifier = Modifier,
-                        placeholder = stringResource(R.string.glass_search_placeholder)
+                    MainScreenRoute.Home.key -> HomeTopBar(
+                        title = stringResource(R.string.schedule),
+                        description = monthTitle
+                    ) { }
+                    MainScreenRoute.Inbox.key -> InboxTopBar(
+                        title = stringResource(R.string.inbox),
+                        description = countUnread
+                    ) { }
+                    MainScreenRoute.Chat.key -> ChatTopBar(
+                        title = stringResource(R.string.chats)
+                    )
+                    MainScreenRoute.Profile.key -> ProfileTopBar(
+                        title = stringResource(R.string.profile),
+                        onClick = onSettings
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            NotificationIcon(
-                onClick = {}
-            )
         }
     }
 }

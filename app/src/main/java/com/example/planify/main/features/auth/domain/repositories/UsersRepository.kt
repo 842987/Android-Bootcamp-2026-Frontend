@@ -1,13 +1,7 @@
 package com.example.planify.main.features.auth.domain.repositories
 
-import com.example.planify.main.features.auth.entities.User
+import com.example.planify.main.features.auth.domain.entities.UserPrivate
 
 interface UsersRepository {
-    fun getMe(): User
-
-    suspend fun fetchMe(): User
-
-    suspend fun fetchUsers(userIds: List<Long>): List<User>
-
-    suspend fun fetchUser(userId: Long): User
+    suspend fun fetchMe(): Result<UserPrivate>
 }
