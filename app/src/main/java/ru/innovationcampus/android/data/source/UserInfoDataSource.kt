@@ -14,7 +14,7 @@ class UserInfoDataSource {
         size: Int
     ): Result<PagingUserListDto> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = Network.client.get("${Network.HOST}/api/person/paginated") {
+            val result = Network.client.get("${Network.HOST}/api/users/paginated") {
                 url {
                     parameter("page", page)
                     parameter("size", size)

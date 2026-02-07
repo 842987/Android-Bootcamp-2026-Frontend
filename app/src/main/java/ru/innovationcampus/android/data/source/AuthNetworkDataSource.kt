@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 class AuthNetworkDataSource {
     suspend fun checkAuth(): Result<Boolean> = withContext(Dispatchers.IO) {
         runCatching {
-            val result = Network.client.get("${Network.HOST}/api/person/login") {
+            val result = Network.client.get("${Network.HOST}/api/users/login") {
                 addAuthHeader()
             }
             result.status == HttpStatusCode.OK

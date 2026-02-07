@@ -160,7 +160,7 @@ fun ItemUser(
     ) {
         AsyncImage(
             modifier = Modifier.size(48.dp).clip(CircleShape),
-            model = user.photoUrl,
+            model = user.avatarUrl,
             contentDescription = null,
         )
         Column {

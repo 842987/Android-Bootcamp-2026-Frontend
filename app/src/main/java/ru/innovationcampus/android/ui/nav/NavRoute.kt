@@ -16,7 +16,6 @@ fun NavigationGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    // TODO: надо написать UseCase
     val currentToken = runBlocking { AuthLocalDataSource.getToken() }
     NavHost(
         modifier = modifier,

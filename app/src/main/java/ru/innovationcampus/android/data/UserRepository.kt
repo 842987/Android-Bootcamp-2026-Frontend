@@ -22,7 +22,7 @@ class UserRepository(
                 users = dto.content?.mapNotNull { userDto ->
                     UserEntity(
                         name = userDto.name ?: return@mapNotNull null,
-                        photoUrl = userDto.photoUrl ?: return@mapNotNull null,
+                        avatarUrl = userDto.avatarUrl ?: return@mapNotNull null,
                         email = userDto.email ?: return@mapNotNull null,
                     )
                 } ?: error("List is null")

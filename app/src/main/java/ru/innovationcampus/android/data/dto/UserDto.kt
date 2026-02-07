@@ -9,6 +9,6 @@ data class UserDto(
     val name: String?,
     @SerialName("email")
     val email: String?,
-    @SerialName("photoUrl")
-    val photoUrl: String?,
+    @SerialName("avatarUrl")
+    val avatarUrl: String?,
 )
