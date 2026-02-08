@@ -24,6 +24,8 @@ class MeetingRepository(
                     MeetingEntity(
                         creatorName = meetingDto.creatorName ?: return@mapNotNull null,
                         date = meetingDto.date ?: return@mapNotNull null,
+                        title = meetingDto.title ?: return@mapNotNull null,
+                        description = meetingDto.description ?: return@mapNotNull null,
                     )
                 } ?: error("List is null")
             )

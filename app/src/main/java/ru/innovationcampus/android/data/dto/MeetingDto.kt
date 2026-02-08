@@ -7,6 +7,13 @@ import kotlinx.serialization.Serializable
 data class MeetingDto(
     @SerialName("creatorName")
     val creatorName: String?,
+
     @SerialName("date")
-    val date: String?
+    val date: String?,
+
+    @SerialName("title")
+    val title: String?,
+
+    @SerialName("description")
+    val description: String?
 )

@@ -181,11 +181,15 @@ fun ItemMeeting(
         modifier = Modifier
             .padding(vertical = 8.dp)
             .fillMaxWidth(),
-//        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.padding(5.dp)) {
+            Text("Название: ${meeting.title}", style = Typography.titleLarge)
             Text("Создатель: ${meeting.creatorName}", style = Typography.titleMedium)
             Text("Дата и время: ${meeting.date}", style = Typography.titleMedium)
+            Text(
+                "Описание: ${meeting.description}", style = Typography.labelLarge,
+                modifier = Modifier.padding(top = 5.dp)
+            )
         }
     }
 }
