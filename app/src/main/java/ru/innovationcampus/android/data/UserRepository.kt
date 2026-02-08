@@ -11,8 +11,6 @@ class UserRepository(
         page: Int,
         size: Int
     ): Result<PagingUserListEntity> {
-        //delay(2_000)
-        //if (Math.random() > 0.8) return Result.failure(IllegalStateException("Ops"))
         return userInfoDataSource.getUser(
             page = page,
             size = size,

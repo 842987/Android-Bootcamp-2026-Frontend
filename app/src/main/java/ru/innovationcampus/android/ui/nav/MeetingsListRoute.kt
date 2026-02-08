@@ -2,4 +2,5 @@ package ru.innovationcampus.android.ui.nav
 
 import kotlinx.serialization.Serializable
 
-sealed interface AppRoute
+@Serializable
+object MeetingsListRoute: AppRoute
